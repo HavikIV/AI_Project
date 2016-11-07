@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Android.App;
 using Android.Content;
@@ -25,6 +26,7 @@ namespace SudokuAI
         TextView[,] labels;
         TextView testLabel;
         RelativeLayout.LayoutParams nestLayoutParams;
+        //byte[,] hintGird;
 
         //int count = 0;
 
@@ -57,12 +59,13 @@ namespace SudokuAI
                     // Give each of the labels a unique ID; range 4-84
                     labels[i,j].Id = (4 + (9 * i)) + j;
                     //labels[i, j].Text = "" + labels[i, j].Id;
-                    labels[i, j].Text = "_";
+                    labels[i, j].Text = "";
                     labels[i, j].TextSize = 20;
-                    //labels[i, j].TextAlignment = TextAlignment.Gravity;
+
+                    //labels[i, j].TextAlignment = TextAlignment.Center;
                     //labels[i, j].SetHeight(180);
-                    //labels[i, j].SetWidth(150);
-                    //labels[i, j].SetPadding(60, 50, 0, 0);
+                    //labels[i, j].SetWidth(138);
+                    //labels[i, j].SetPadding(55, 45, 0, 0);
 
                     // Assign its parameters here?
                     var textParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
@@ -132,25 +135,30 @@ namespace SudokuAI
             layoutBase.AddView(grid);
 
             // Going to try and add a RelativeLayout to make my view nested
-            testLabel = new TextView(this);
-            testLabel.Text = "9";
-            testLabel.SetWidth(180);
-            testLabel.SetHeight(150);
-            testLabel.SetPadding(60, 50, 0, 0);
-            RelativeLayout labelLayout = new RelativeLayout(this);
-            nestLayoutParams = new RelativeLayout.LayoutParams(grid.Width, grid.Height);
-            nestLayoutParams.AddRule(LayoutRules.AlignStart, 1);
-            labelLayout.LayoutParameters = nestLayoutParams;
-            labelLayout.AddView(testLabel);
-            layoutBase.AddView(labelLayout);
+            //testLabel = new TextView(this);
+            //testLabel.Text = "9";
+            //testLabel.SetWidth(180);
+            //testLabel.SetHeight(150);
+            //testLabel.SetPadding(60, 50, 0, 0);
+            //RelativeLayout labelLayout = new RelativeLayout(this);
+            //nestLayoutParams = new RelativeLayout.LayoutParams(grid.Width, grid.Height);
+            //nestLayoutParams.AddRule(LayoutRules.AlignStart, 1);
+            //labelLayout.LayoutParameters = nestLayoutParams;
+            //labelLayout.AddView(testLabel);
+            //layoutBase.AddView(labelLayout);
 
             // Adding a button that will be used to step through the "AI"'s solution
             nextButton = new Button(this) { Text = "Next" };
             nextButton.Id = 2;
+            //nextButton.Visibility = ViewStates.Invisible; // Makes the button invisible
+            nextButton.Enabled = false; // Disables the button so it can't be clicked
 
             // Adding a button that will be used to start the "AI" to solve the puzzle
             startButton = new Button(this) { Text = "Start" };
             startButton.Id = 3;
+            //startButton.Visibility = ViewStates.Invisible; // Makes the button invisible
+            startButton.Enabled = false; // Disables the button so it can't be clicked
+            startButton.Click += startButton_Click;
 
             // Layout Parameters for Portrait mode
             // nextButton
@@ -182,86 +190,112 @@ namespace SudokuAI
 
 
                 // Padding for the labels for Portrait orientation
-                for (int i = 0; i < 9; i++)
+                for (byte i = 0; i < 9; i++)
                 {
-                    for (int j = 0; j < 9; j++)
+                    for (byte j = 0; j < 9; j++)
                     {
-                        if (i == 0 && j == 0)
-                        {
-                            labels[i, j].SetPadding(60, 50, 0, 0);
-                        }
-                        else if (i == 0 && j != 0)
-                        {
-                            if (j < 3 || j > 5)
-                            {
-                                labels[i, j].SetPadding(100, 50, 0, 0);
-                            }
-                            else
-                            {
-                                labels[i, j].SetPadding(120, 50, 0, 0);
-                            }
-                        }
-                        else if (i != 0)
-                        {
-                            labels[i, j].SetPadding(60, 100, 0, 0);
-                            if (j != 0)
-                            {
-                                if (j < 3 || j < 5)
-                                {
-                                    labels[i, j].SetPadding(100, 100, 0, 0);
-                                }
-                                else
-                                {
-                                    labels[i, j].SetPadding(120, 100, 0, 0);
-                                }
-                            }
-                        }
+                        // Set the height and width of each indiviual label for Portrait orientation
+                        labels[i, j].SetHeight(180);
+                        labels[i, j].SetWidth(138);
+                        // As each has a specific size, height and width, they no longer
+                        // different SetPadding parameters as before
+                        labels[i, j].SetPadding(55, 45, 0, 0);
                     }
                 }
+
+                //for (int i = 0; i < 9; i++)
+                //{
+                //    for (int j = 0; j < 9; j++)
+                //    {
+                //        if (i == 0 && j == 0)
+                //        {
+                //            labels[i, j].SetPadding(60, 50, 0, 0);
+                //        }
+                //        else if (i == 0 && j != 0)
+                //        {
+                //            if (j < 3 || j > 5)
+                //            {
+                //                labels[i, j].SetPadding(100, 50, 0, 0);
+                //            }
+                //            else
+                //            {
+                //                labels[i, j].SetPadding(120, 50, 0, 0);
+                //            }
+                //        }
+                //        else if (i != 0)
+                //        {
+                //            labels[i, j].SetPadding(60, 100, 0, 0);
+                //            if (j != 0)
+                //            {
+                //                if (j < 3 || j < 5)
+                //                {
+                //                    labels[i, j].SetPadding(100, 100, 0, 0);
+                //                }
+                //                else
+                //                {
+                //                    labels[i, j].SetPadding(120, 100, 0, 0);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
             else
             {
                 // The screen is in Landscape mode
                 startButton.LayoutParameters = startButtonParamsLandscape;
                 nextButton.LayoutParameters = nextButtonParamsLandscape;
-                
+
                 // Padding for the labels for Landscape orientation
-                for (int i = 0; i < 9; i++)
+                for (byte i = 0; i < 9; i++)
                 {
-                    for (int j = 0; j < 9; j++)
+                    for (byte j = 0; j < 9; j++)
                     {
-                        if (i == 0 && j == 0)
-                        {
-                            labels[i, j].SetPadding(80, 30, 0, 0);
-                        }
-                        else if (i == 0 && j != 0)
-                        {
-                            if (j < 3 || j > 5)
-                            {
-                                labels[i, j].SetPadding(160, 30, 0, 0);
-                            }
-                            else
-                            {
-                                labels[i, j].SetPadding(140, 30, 0, 0);
-                            }
-                        }
-                        else if (i != 0)
-                        {
-                            labels[i, j].SetPadding(80, 40, 0, 0);
-                            if (j != 0)
-                            {
-                                if (j < 3 || j < 5)
-                                {
-                                    labels[i, j].SetPadding(160, 40, 0, 0);
-                                }
-                                else
-                                {
-                                    labels[i, j].SetPadding(140, 40, 0, 0);
-                                }
-                            }
-                        }
+                        // Set the height and width of each indiviual label for Landscape orientation
+                        labels[i, j].SetHeight(125);
+                        labels[i, j].SetWidth(185);
+                        // As each has a specific size, height and width, they no longer
+                        // different SetPadding parameters as before
+                        labels[i, j].SetPadding(80, 50, 0, 0);
                     }
                 }
+
+                //for (int i = 0; i < 9; i++)
+                //{
+                //    for (int j = 0; j < 9; j++)
+                //    {
+                //        if (i == 0 && j == 0)
+                //        {
+                //            labels[i, j].SetPadding(80, 30, 0, 0);
+                //        }
+                //        else if (i == 0 && j != 0)
+                //        {
+                //            if (j < 3 || j > 5)
+                //            {
+                //                labels[i, j].SetPadding(160, 30, 0, 0);
+                //            }
+                //            else
+                //            {
+                //                labels[i, j].SetPadding(140, 30, 0, 0);
+                //            }
+                //        }
+                //        else if (i != 0)
+                //        {
+                //            labels[i, j].SetPadding(80, 40, 0, 0);
+                //            if (j != 0)
+                //            {
+                //                if (j < 3 || j < 5)
+                //                {
+                //                    labels[i, j].SetPadding(160, 40, 0, 0);
+                //                }
+                //                else
+                //                {
+                //                    labels[i, j].SetPadding(140, 40, 0, 0);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
 
             ////RelativeLayout.LayoutParams textParams;
@@ -312,40 +346,16 @@ namespace SudokuAI
                 nextButton.LayoutParameters = nextButtonParamsPortrait;
 
                 // Padding for the labels for Portrait orientation
-                for (int i = 0; i < 9; i++)
+                for (byte i = 0; i < 9; i++)
                 {
-                    for (int j = 0; j < 9; j++)
+                    for (byte j = 0; j < 9; j++)
                     {
-                        if (i == 0 && j == 0)
-                        {
-                            labels[i, j].SetPadding(60, 50, 0, 0);
-                        }
-                        else if (i == 0 && j != 0)
-                        {
-                            if (j < 3 || j > 5)
-                            {
-                                labels[i, j].SetPadding(100, 50, 0, 0);
-                            }
-                            else
-                            {
-                                labels[i, j].SetPadding(120, 50, 0, 0);
-                            }
-                        }
-                        else if (i != 0)
-                        {
-                            labels[i, j].SetPadding(60, 100, 0, 0);
-                            if (j != 0)
-                            {
-                                if (j < 3 || j < 5)
-                                {
-                                    labels[i, j].SetPadding(100, 100, 0, 0);
-                                }
-                                else
-                                {
-                                    labels[i, j].SetPadding(120, 100, 0, 0);
-                                }
-                            }
-                        }
+                        // Set the height and width of each indiviual label for Portrait orientation
+                        labels[i, j].SetHeight(180);
+                        labels[i, j].SetWidth(138);
+                        // As each has a specific size, height and width, they no longer
+                        // different SetPadding parameters as before
+                        labels[i, j].SetPadding(55, 45, 0, 0);
                     }
                 }
             }
@@ -355,43 +365,286 @@ namespace SudokuAI
                 nextButton.LayoutParameters = nextButtonParamsLandscape;
 
                 // Padding for the labels for Landscape orientation
-                for (int i = 0; i < 9; i++)
+                for (byte i = 0; i < 9; i++)
                 {
-                    for (int j = 0; j < 9; j++)
+                    for (byte j = 0; j < 9; j++)
                     {
-                        if (i == 0 && j == 0)
-                        {
-                            labels[i, j].SetPadding(80, 30, 0, 0);
-                        }
-                        else if (i == 0 && j != 0)
-                        {
-                            if (j < 3 || j > 5)
-                            {
-                                labels[i, j].SetPadding(160, 30, 0, 0);
-                            }
-                            else
-                            {
-                                labels[i, j].SetPadding(140, 30, 0, 0);
-                            }
-                        }
-                        else if (i != 0)
-                        {
-                            labels[i, j].SetPadding(80, 40, 0, 0);
-                            if (j != 0)
-                            {
-                                if (j < 3 || j < 5)
-                                {
-                                    labels[i, j].SetPadding(160, 40, 0, 0);
-                                }
-                                else
-                                {
-                                    labels[i, j].SetPadding(140, 40, 0, 0);
-                                }
-                            }
-                        }
+                        // Set the height and width of each indiviual label for Landscape orientation
+                        labels[i, j].SetHeight(125);
+                        labels[i, j].SetWidth(185);
+                        // As each has a specific size, height and width, they no longer
+                        // different SetPadding parameters as before
+                        labels[i, j].SetPadding(80, 50, 0, 0);
                     }
                 }
             }
+        }
+
+        //  Function that is called when the startButton is clicked
+        //  This Function will Disable all of the labels so the user can
+        //  no longer can any of their values. It will also create the hintGrid
+        //  from the values that the user had added to the labels and then pass it
+        //  to create a SudokuGrid instance, in order to solve the puzzle
+        private void startButton_Click(object s, EventArgs E)
+        {
+            // Make sure that none of the columns or rows have multiples of a single value
+            if (!hasDuplicates())
+            {
+                byte[,] hintGrid = new byte[9, 9]; // Initializes the all of the values to 0 by default
+
+                // Initialize the hintGrid based on the values in the labels
+                // In other words, if the label has a numerical value then 
+                // it's given it the same value as the one assigned to the label by the user
+                for (byte i = 0; i < 9; i++)
+                {
+                    for (byte j = 0; j < 9; j++)
+                    {
+                        if (labels[i, j].Text != "")
+                        {
+                            // Tries to see if it can parse the string into a byte value.
+                            // If it can, then it will assign it within hintGrid
+                            byte.TryParse(labels[i, j].Text, out hintGrid[i, j]);
+                        }
+                    }
+                }
+
+                // Disable all of the labels so the user can't change the given puzzle
+                disableLabels();
+
+                // Create a SodokuGrid instance; Pass the hintGrid to it
+                SudokuGrid sudoku = new SudokuGrid(hintGrid);
+
+                // Disable the availableValues for each slot in the grid
+
+                // No longer want the user to be able to click on the startButton as
+                // I've already finished setting up the given puzzle to be solved
+                startButton.Enabled = false;
+
+                // Start solving the puzzle
+                solvePuzzle(sudoku);
+
+                // Enable the nextButton
+                nextButton.Enabled = true;
+            }
+            else
+            {
+                // Show a Dialog that informs the user that the given puzzle isn't valid
+                AlertDialog.Builder InvalidDialog = new AlertDialog.Builder(this);
+                InvalidDialog.SetTitle("Invalid Puzzle");
+                RelativeLayout linearLayout = new RelativeLayout(this);
+                linearLayout.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                TextView label = new TextView(this);
+                label.Text = "The given puzzle contains duplicate values either in the same column, row or square.";
+                linearLayout.AddView(label);
+                InvalidDialog.SetView(linearLayout);
+
+                InvalidDialog.SetPositiveButton("Understood", (y, a) => { });
+                InvalidDialog.Show();
+            }
+        }
+
+        // This function will disable the labels so that the user may no longer
+        // interact with them, especially when the puzzle has been passed to the solver
+        private void disableLabels()
+        {
+            for (byte i = 0; i < 9; i++)
+            {
+                for (byte j = 0; j < 9; j++)
+                {
+                    labels[i, j].Enabled = false;
+                }
+            }
+        }
+
+        // This function will enable the labels
+        private void enableLabels()
+        {
+            for (byte i = 0; i < 9; i++)
+            {
+                for (byte j = 0; j < 9; j++)
+                {
+                    labels[i, j].Enabled = true;
+                }
+            }
+        }
+
+        // A recursive function that will solve the given puzzle
+        // It will continue until it can't find any empty slots in the puzzle
+        bool solvePuzzle(SudokuGrid sudoku)
+        {
+            byte row, col;
+            row = col = 0;
+            if (!FindUnassignedLocation(sudoku, ref row, ref col))
+            {
+                return true;
+            }
+            for (byte num = 1; num < 10; num++)
+            {
+                if (sudoku.canAddValue(row, col, num))
+                {
+                    sudoku.addValue(row, col, num);
+                    labels[row, col].Text = "" + num;
+                    if (solvePuzzle(sudoku))
+                    {
+                        return true;
+                    }
+                    sudoku.addValue(row, col, 0);
+                    labels[row, col].Text = "_";
+                }
+            }
+            return false;
+        }
+
+        bool FindUnassignedLocation(SudokuGrid sudoku, ref byte row, ref byte col)
+        {
+            for (row = 0; row < 9; row++)
+            {
+                for (col = 0; col < 9; col++)
+                {
+                    if (sudoku.isSlotEmpty(row, col))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        //bool withinRow(int x, int row, int p[][9])
+        //{
+        //    for (int col = 0; col < 9; col++)
+        //    {
+        //        if (p[row][col] == x)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        //bool withinColumn(int x, int col, int p[][9])
+        //{
+        //    for (int row = 0; row < 9; row++)
+        //    {
+        //        if (p[row][col] == x)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        //bool withinSquare(int x, int startRow, int startCol, int p[][9])
+        //{
+        //    for (int row = 0; row < 3; row++)
+        //    {
+        //        for (int col = 0; col < 3; col++)
+        //        {
+        //            if (p[row + startRow][col + startCol] == x)
+        //            {
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        //bool canAdd(byte x, byte row, byte col, SudokuGrid sudoku)
+        //{
+        //    return !withinRow(x, row, p) && !withinColumn(x, col, p)
+        //        && !withinSquare(x, row - (row % 3), col - (col % 3), p);
+        //}
+
+        //  Will go through the labels to determine whether or not the user
+        //  provided a valid puzzle.
+        private bool hasDuplicates()
+        {
+            bool duplicates = false;
+            for (byte i = 0; i < 9; i++)
+            {
+                for (byte j = 0; j < 9; j++)
+                {
+                    if (labels[i, j].Text != "")
+                    {
+                        // Check to see if the value is within the same column
+                        for (byte col = (byte)(j - 1); col != 255; col--)
+                        {
+                            if (labels[i, j].Text == labels[i, col].Text)
+                            {
+                                duplicates = true;
+                                break;
+                            }
+                        }
+
+                        // If duplicates is true, there's no reason to continue the inner for loop
+                        if (duplicates) { break; }
+
+                        for (byte col = (byte)(j + 1); col < 9; col++)
+                        {
+                            if (labels[i, j].Text == labels[i, col].Text)
+                            {
+                                duplicates = true;
+                                break;
+                            }
+                        }
+
+                        // If duplicates is true, there's no reason to continue the inner for loop
+                        if (duplicates) { break; }
+
+                        // Check to see if the value is within the same row
+                        for (byte row = (byte)(i - 1); row != 255; row--)
+                        {
+                            if (labels[i, j].Text == labels[row, j].Text)
+                            {
+                                duplicates = true;
+                                break;
+                            }
+                        }
+
+                        // If duplicates is true, there's no reason to continue the inner for loop
+                        if (duplicates) { break; }
+
+                        for (byte row = (byte)(i + 1); row < 9; row++)
+                        {
+                            if (labels[i, j].Text == labels[row, j].Text)
+                            {
+                                duplicates = true;
+                                break;
+                            }
+                        }
+
+                        // If duplicates is true, there's no reason to continue the inner for loop
+                        if (duplicates) { break; }
+
+                        // Check to see if the value is within the same square
+                        byte startRow = (byte)(i - (i % 3));
+                        byte startCol = (byte)(j - (j % 3));
+                        for (byte row = 0; row < 3; row++)
+                        {
+                            for (byte col = 0; col < 3; col++)
+                            {
+                                if (i != row + startRow && j != col + startCol)
+                                {
+                                    if (labels[i, j].Text == labels[row + startRow, col + startCol].Text)
+                                    {
+                                        duplicates = true;
+                                        break;
+                                    }
+                                }
+                                if (duplicates) { break; }
+                            }
+                            if (duplicates) { break; }
+                        }
+                    }
+
+                    // If duplicates is true, there's no reason to continue the inner for loop
+                    if (duplicates) { break; }
+                }
+
+                // If duplicates is true, there's no reason to continue the outer for loop
+                if (duplicates) { break; }
+            }
+            return duplicates;
         }
 
         //  Function that is called whenever one of the labels has been pressed/tapped
@@ -400,13 +653,26 @@ namespace SudokuAI
         private void label_Click(object s, EventArgs E)
         {
             TextView label = (s as TextView);
-            label.Click += (sender, e) =>
+            label.Click += async (sender, e) =>
             {
                 // Create a dialog to get user input
-                //var dialog = new DialogFragment();
-                //dialog.s
-                //dialog.Show(FragmentManager, "Number");
+                var dialog = new NumberPickerDialogFragment(this, 1, 9, 3, ref label);
+                dialog.Show(FragmentManager, "number");
 
+                await Task.Delay(500); // wait for the dialog to show on to the screen
+                // Don't want the function to continue executing until the dialog has been closed
+                while (dialog.IsAdded)
+                {
+                    await Task.Delay(50);
+                }
+                // Need to enable the startButton if it hasn't already been enabled
+                // It should only be enabled when at least one of the labels has a nonzero value
+                if (!startButton.Enabled && label.Text != "_")
+                {
+                    startButton.Enabled = true;
+                }
+
+                /**  Will use the NumberPickerDialog class instead creating the dialog here
                 // Create a linerLayout for which hold a NumberPicker
                 // The NumberPicker will have a range of 1-9 and should have its
                 // orientation set as horizontal, not sure if it works.
@@ -435,7 +701,7 @@ namespace SudokuAI
                 pickerAlertDialog.SetTitle("Select a number");
                 pickerAlertDialog.SetView(linearLayout);
 
-                /** Use the NumberPicker created in the NumberPickerDialog.xml **/
+                /** Use the NumberPicker created in the NumberPickerDialog.xml **
                 //var inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
                 //var view = inflater.Inflate(Resource.Layout.NumberPickerDialog, null);
                 //var numberPicker = view.FindViewById<NumberPicker>(Resource.Id.numberPicker);
@@ -446,71 +712,9 @@ namespace SudokuAI
 
                 pickerAlertDialog.SetPositiveButton("OK", (y, a) => { label.Text = picker.Value.ToString(); });
                 pickerAlertDialog.SetNegativeButton("Cancel", (y, a) => { });
-                pickerAlertDialog.Show();
+                pickerAlertDialog.Show(); **/
 
-                //var dialog = new NumberPickerDialogFragment(this, 1, 9, 3);
-                //dialog.Show(FragmentManager, "number");
-                
-
-                // Create a new relative layout that contains 9 TextViews for values 1-9
-                //RelativeLayout numberPickerLayout = new RelativeLayout(this);
-                //numberPickerLayout.Id = 0;
-                //for (int i = 1; i < 10; i++)
-                //{
-                //    TextView npLabel = new TextView(this);
-                //    npLabel.Id = i;
-                //    npLabel.Text = (i).ToString();
-                //    var txtParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                //    if (i != 1)
-                //    {
-                //        txtParams.AddRule(LayoutRules.RightOf, i);
-                //    }
-                //    npLabel.LayoutParameters = txtParams;
-                //    numberPickerLayout.AddView(npLabel);
-                //}
-                //SetContentView(numberPickerLayout);
             };
-        }
-    }
-
-    // Found this class online to create a NumberPicker within a Dialog.
-    // I was going to use this to allow the user to picker a number to assign
-    // to the clicked label, but I can't seem to get this working as the example
-    // showed passing Activity as the context and this as the listener, but that didn't
-    // work. It allowed me to pass this as context as I had assumed it should, but I wasn't
-    // able to think what I needed to pass as the listener. Thought about passing the label,
-    // a new NumberPicker.IOnClickListener, but these didn't work.
-    public class NumberPickerDialogFragment : DialogFragment
-    {
-        private readonly Context _context;
-        private readonly int _min, _max, _current;
-        private readonly NumberPicker.IOnValueChangeListener _listener;
-
-        public NumberPickerDialogFragment(Context context, int min, int max, int current, NumberPicker.IOnValueChangeListener listener)
-        {
-            _context = context;
-            _min = min;
-            _max = max;
-            _current = current;
-            _listener = listener;
-        }
-
-        public override Dialog OnCreateDialog(Bundle savedState)
-        {
-            var inflater = (LayoutInflater)_context.GetSystemService(Context.LayoutInflaterService);
-            var view = inflater.Inflate(Resource.Layout.NumberPickerDialog, null);
-            var numberPicker = view.FindViewById<NumberPicker>(Resource.Id.numberPicker);
-            numberPicker.MaxValue = _max;
-            numberPicker.MinValue = _min;
-            numberPicker.Value = _current;
-            numberPicker.SetOnValueChangedListener(_listener);
-
-            var dialog = new AlertDialog.Builder(_context);
-            dialog.SetTitle(Resource.String.NumberPickerTitle);
-            dialog.SetView(view);
-            dialog.SetNegativeButton("Cancel", (s, a) => { });
-            dialog.SetPositiveButton("OK", (s, a) => { });
-            return dialog.Create();
         }
     }
 }
