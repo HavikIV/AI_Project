@@ -203,6 +203,17 @@ namespace SudokuAI
             nextButtonParamsLandscape.AddRule(LayoutRules.AlignParentRight);
             nextButtonParamsLandscape.AddRule(LayoutRules.Below, startButton.Id);
 
+            var checkBox = new CheckBox(this) { Text = "Show Steps" };
+            checkBox.Id = 97;
+            checkBox.Checked = true;
+            var checkBoxParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            checkBoxParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
+
+            var checkBoxParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentRight);
+            checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentBottom);
+
+
             // Add labels in the location of the squares 
 
             // Depending on the initial orientation, the buttons will placed at different locations
@@ -211,6 +222,8 @@ namespace SudokuAI
                 // The screen is in Portrait mode
                 startButton.LayoutParameters = startButtonParamsPortrait;
                 nextButton.LayoutParameters = nextButtonParamsPortrait;
+                checkBox.LayoutParameters = checkBoxParamsPortrait;
+
 
                 // Padding for the labels for Portrait orientation
                 for (byte i = 0; i < 9; i++)
@@ -268,6 +281,7 @@ namespace SudokuAI
                 // The screen is in Landscape mode
                 startButton.LayoutParameters = startButtonParamsLandscape;
                 nextButton.LayoutParameters = nextButtonParamsLandscape;
+                checkBox.LayoutParameters = checkBoxParamsLandscape;
 
                 if (restart != null)
                 {
@@ -350,6 +364,7 @@ namespace SudokuAI
             // Add the buttons to the layout
             layoutBase.AddView(startButton);
             layoutBase.AddView(nextButton);
+            layoutBase.AddView(checkBox);
             //layoutBase.AddView(testLabel);
             //layoutBase.AddView(testLabel2);
             for (int i = 0; i < 9; i++)
@@ -378,6 +393,11 @@ namespace SudokuAI
                 startButton.LayoutParameters = startButtonParamsPortrait;
                 nextButton.LayoutParameters = nextButtonParamsPortrait;
 
+                var checkBoxParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                checkBoxParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
+
+                FindViewById<CheckBox>(97).LayoutParameters = checkBoxParamsPortrait;
+
                 if (restart != null)
                 {
                     restart.LayoutParameters = restartParamsPortrait;
@@ -401,6 +421,12 @@ namespace SudokuAI
             {
                 startButton.LayoutParameters = startButtonParamsLandscape;
                 nextButton.LayoutParameters = nextButtonParamsLandscape;
+
+                var checkBoxParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentRight);
+                checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentBottom);
+
+                FindViewById<CheckBox>(97).LayoutParameters = checkBoxParamsLandscape;
 
                 if (restart != null)
                 {
@@ -603,8 +629,8 @@ namespace SudokuAI
                             val++;
                             if (item == 1)
                             {
-                                labels[row, col].Text = labels[row, col].Text + val;
-                                labels[row, col].TextSize = 10;
+                                labels[row, col].Text = labels[row, col].Text + val + " ";
+                                labels[row, col].TextSize = 9;
                             }
                             if ((val % 3) == 0)
                             {
@@ -650,7 +676,10 @@ namespace SudokuAI
                     labels[row, col].Text = "" + sudoku.getSlotValue(row, col);
                     labels[row, col].TextSize = 20;
 
-                    await waiting(sudoku); // force the App to wait so the current state can be written to the screen
+                    if (FindViewById<CheckBox>(97).Checked)
+                    {
+                        await waiting(sudoku); // force the App to wait so the current state can be written to the screen
+                    }
                     if (await solvePuzzle(sudoku))
                     {
                         // Only way to get here is that the puzzle has been solved
