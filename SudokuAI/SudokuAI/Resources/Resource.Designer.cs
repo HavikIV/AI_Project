@@ -48,7 +48,10 @@ namespace SudokuAI
 			public const int Icon = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int SudokuGrid = 2130837505;
+			public const int Opening = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int SudokuGrid = 2130837506;
 			
 			static Drawable()
 			{
@@ -63,14 +66,11 @@ namespace SudokuAI
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050001
-			public const int MyButton = 2131034113;
-			
 			// aapt resource value: 0x7f050000
 			public const int MyImage = 2131034112;
 			
-			// aapt resource value: 0x7f050002
-			public const int numberPicker = 2131034114;
+			// aapt resource value: 0x7f050001
+			public const int numberPicker = 2131034113;
 			
 			static Id()
 			{

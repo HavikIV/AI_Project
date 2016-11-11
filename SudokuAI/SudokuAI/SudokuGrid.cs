@@ -111,6 +111,12 @@ namespace SudokuAI
             return squares[row, col].isEmpty();
         }
 
+        // Return a Slot's value
+        public byte getSlotValue(byte row, byte col)
+        {
+            return squares[row, col].getValue();
+        }
+
         // Check to see if the value can be placed in the specified Slot
         public bool canAddValue(byte row, byte col, byte val)
         {
@@ -121,11 +127,56 @@ namespace SudokuAI
             return false;
         }
 
-        // Add a value to a specified Slot
+        // Check to see if the Slot has an availableValues that can be assigned to it.
+        // It will return true if the maxAV is greater than 1, else it returns false
+        public bool canPlaceAValue(byte row, byte col, byte skip)
+        {
+            return (squares[row, col].getMaxAV() != 0 && squares[row, col].getMaxAV() > skip);
+        }
+
+        // Add a value to a specified Slot, use it to reset the Slot and all AV's
         public void addValue(byte row, byte col, byte val)
         {
             squares[row, col].setValue(val);
             updateSlotAVs();
+        }
+
+        // Will add the first available value to the Slot
+        public bool addAValueToSlot(byte row, byte col, byte skip)
+        {
+            byte[] av = squares[row, col].getAV();
+            byte val = 0;
+            foreach (byte item in av)
+            {
+                val++;  //  As the loop progresses, increment val by 1.
+                if (item == 1)
+                {
+                    // If there's no need to skip a value, go ahead and add the value 
+                    if (skip == 0)
+                    {
+                        squares[row, col].setValue(val);
+                        updateSlotAVs();
+                        return true;
+                    }
+                    // Need to skip this value as it wasn't the right value for this Slot.
+                    // Decrement the skip variable so that the loop can find the next
+                    // possible available value to add to the Slot.
+                    skip--;
+                }
+            }
+            return false;
+        }
+
+        // Returns a Slot's maxAV
+        public byte getSlotMaxAv(byte row, byte col)
+        {
+            return squares[row, col].getMaxAV();
+        }
+
+        // Returns a Slot's AV's
+        public byte[] getSlotAV(byte row, byte col)
+        {
+            return squares[row, col].getAV();
         }
 
         // Will find the Slot with the least amount of possible values it can have.

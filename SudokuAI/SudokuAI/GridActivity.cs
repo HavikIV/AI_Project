@@ -19,13 +19,17 @@ namespace SudokuAI
         // Global Variables
         Button startButton;
         Button nextButton;
+        Button restart;
         RelativeLayout.LayoutParams startButtonParamsPortrait;
         RelativeLayout.LayoutParams startButtonParamsLandscape;
         RelativeLayout.LayoutParams nextButtonParamsPortrait;
         RelativeLayout.LayoutParams nextButtonParamsLandscape;
+        RelativeLayout.LayoutParams restartParamsPortrait;
+        RelativeLayout.LayoutParams restartParamsLandscape;
         TextView[,] labels;
-        TextView testLabel;
-        RelativeLayout.LayoutParams nestLayoutParams;
+        bool waitingOnNext = true;
+        //TextView testLabel;
+        //RelativeLayout.LayoutParams nestLayoutParams;
         //byte[,] hintGird;
 
         //int count = 0;
@@ -54,7 +58,25 @@ namespace SudokuAI
             {
                 for (int j = 0; j < 9; j++)
                 {
+                    // Create a ColorStateList that will be used to changed the colors of the labels for each of its different states
+                    //int[][] states = new int[][]
+                    //{
+                    //    new int[] { Android.Resource.Attribute.StatePressed },  // pressed
+                    //    new int [] { Android.Resource.Attribute.StateFocused }, // focused
+                    //    new int[] { Android.Resource.Attribute.StateEnabled  }   // enabled
+                    //};
+
+                    //int[] colors = new int[]
+                    //{
+                    //    Android.Resource.Color.Black, // green
+                    //    Android.Resource.Color.Black, // blue
+                    //    Android.Resource.Color.Black  // red
+                    //};
+
+                    //Android.Content.Res.ColorStateList list = new Android.Content.Res.ColorStateList(states, colors);
+
                     labels[i,j] = new TextView(this);
+                    //labels[i, j].SetTextColor(list);
                     labels[i,j].Text = "";
                     // Give each of the labels a unique ID; range 4-84
                     labels[i,j].Id = (4 + (9 * i)) + j;
@@ -123,6 +145,7 @@ namespace SudokuAI
             var surfaceOrientation = WindowManager.DefaultDisplay.Rotation;
 
             RelativeLayout layoutBase = new RelativeLayout(this);
+            layoutBase.Id = 98;
             layoutBase.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
             layoutBase.SetPadding(100, 100, 100, 100);
 
@@ -152,6 +175,7 @@ namespace SudokuAI
             nextButton.Id = 2;
             //nextButton.Visibility = ViewStates.Invisible; // Makes the button invisible
             nextButton.Enabled = false; // Disables the button so it can't be clicked
+            nextButton.Click += NextButton_Click;
 
             // Adding a button that will be used to start the "AI" to solve the puzzle
             startButton = new Button(this) { Text = "Start" };
@@ -187,7 +211,6 @@ namespace SudokuAI
                 // The screen is in Portrait mode
                 startButton.LayoutParameters = startButtonParamsPortrait;
                 nextButton.LayoutParameters = nextButtonParamsPortrait;
-
 
                 // Padding for the labels for Portrait orientation
                 for (byte i = 0; i < 9; i++)
@@ -245,6 +268,11 @@ namespace SudokuAI
                 // The screen is in Landscape mode
                 startButton.LayoutParameters = startButtonParamsLandscape;
                 nextButton.LayoutParameters = nextButtonParamsLandscape;
+
+                if (restart != null)
+                {
+                    restart.LayoutParameters = restartParamsLandscape;
+                }
 
                 // Padding for the labels for Landscape orientation
                 for (byte i = 0; i < 9; i++)
@@ -336,6 +364,11 @@ namespace SudokuAI
             SetContentView(layoutBase);            
         }
 
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            waitingOnNext = false;
+        }
+
         public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
@@ -344,6 +377,11 @@ namespace SudokuAI
             {
                 startButton.LayoutParameters = startButtonParamsPortrait;
                 nextButton.LayoutParameters = nextButtonParamsPortrait;
+
+                if (restart != null)
+                {
+                    restart.LayoutParameters = restartParamsPortrait;
+                }
 
                 // Padding for the labels for Portrait orientation
                 for (byte i = 0; i < 9; i++)
@@ -363,6 +401,11 @@ namespace SudokuAI
             {
                 startButton.LayoutParameters = startButtonParamsLandscape;
                 nextButton.LayoutParameters = nextButtonParamsLandscape;
+
+                if (restart != null)
+                {
+                    restart.LayoutParameters = restartParamsLandscape;
+                }
 
                 // Padding for the labels for Landscape orientation
                 for (byte i = 0; i < 9; i++)
@@ -385,7 +428,7 @@ namespace SudokuAI
         //  no longer can any of their values. It will also create the hintGrid
         //  from the values that the user had added to the labels and then pass it
         //  to create a SudokuGrid instance, in order to solve the puzzle
-        private void startButton_Click(object s, EventArgs E)
+        private async void startButton_Click(object s, EventArgs E)
         {
             // Make sure that none of the columns or rows have multiples of a single value
             if (!hasDuplicates())
@@ -420,11 +463,17 @@ namespace SudokuAI
                 // I've already finished setting up the given puzzle to be solved
                 startButton.Enabled = false;
 
-                // Start solving the puzzle
-                solvePuzzle(sudoku);
-
                 // Enable the nextButton
                 nextButton.Enabled = true;
+
+                // Start solving the puzzle
+                await solvePuzzle(sudoku);
+
+                // Since the puzzle has been solved need to disable the next button
+                nextButton.Enabled = false;
+
+                // Add the restart button
+                addRestart();
             }
             else
             {
@@ -443,6 +492,58 @@ namespace SudokuAI
             }
         }
 
+        private void addRestart()
+        {
+            // Add the restart button the screen
+            restart = new Button(this) { Text = "Restart" };
+            restart.Id = 99;
+
+            // Layout Parameters for Portrait mode
+            restartParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            restartParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
+            restartParamsPortrait.AddRule(LayoutRules.LeftOf, startButton.Id);
+
+
+            // Layout Parameters for Landscape mode
+            restartParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            restartParamsLandscape.AddRule(LayoutRules.AlignParentRight);
+            restartParamsLandscape.AddRule(LayoutRules.Below, nextButton.Id);
+
+            var surfaceOrientation = WindowManager.DefaultDisplay.Rotation;
+
+            // Depending on the initial orientation, the buttons will placed at different locations
+            if (surfaceOrientation == SurfaceOrientation.Rotation0 || surfaceOrientation == SurfaceOrientation.Rotation180)
+            {
+                // The screen is in Portrait mode
+                restart.LayoutParameters = restartParamsPortrait;
+
+            }
+            else
+            {
+                // The screen is in Landscape mode
+                restart.LayoutParameters = restartParamsLandscape;
+            }
+
+            restart.Click += Restart_Click;
+
+            var layoutbase = FindViewById<RelativeLayout>(98);
+            layoutbase.AddView(restart);
+        }
+
+        private void Restart_Click(object sender, EventArgs e)
+        {
+            for (byte i = 0; i < 9; i++)
+            {
+                for (byte j = 0; j < 9; j++)
+                {
+                    labels[i, j].Text = "";
+                }
+            }
+            enableLabels();
+            var layoutbase = FindViewById<RelativeLayout>(98);
+            layoutbase.RemoveView(FindViewById<Button>(99));
+        }
+
         // This function will disable the labels so that the user may no longer
         // interact with them, especially when the puzzle has been passed to the solver
         private void disableLabels()
@@ -451,7 +552,8 @@ namespace SudokuAI
             {
                 for (byte j = 0; j < 9; j++)
                 {
-                    labels[i, j].Enabled = false;
+                    //labels[i, j].Enabled = false; // disables the label
+                    labels[i, j].Clickable = false; // diables the label's click event
                 }
             }
         }
@@ -463,51 +565,190 @@ namespace SudokuAI
             {
                 for (byte j = 0; j < 9; j++)
                 {
-                    labels[i, j].Enabled = true;
+                    labels[i, j].Clickable = true;
                 }
             }
+        }
+
+        // This method will force the App to wait until the user clicks on the nextButton
+        private async Task<bool> waiting(SudokuGrid sudoku)
+        {
+            // Display all possible values that each empty Slot can have
+            await displayCurrentState(sudoku);
+            while (waitingOnNext)
+            {
+                await Task.Delay(1);
+            }
+
+            // Need to reset the boolean for the next await
+            waitingOnNext = true;
+            return true;
+        }
+
+        // This function will write the current state of the Sudoku Puzzle to the screen
+        // By current I'm referring to the what values an empty Slot can have
+        private async Task<bool> displayCurrentState(SudokuGrid sudoku)
+        {
+            byte val = 0;
+            for (byte row = 0; row < 9; row++)
+            {
+                for (byte col = 0; col < 9; col++)
+                {
+                    if (sudoku.isSlotEmpty(row, col))
+                    {
+                        byte[] tempAv = sudoku.getSlotAV(row, col);
+                        labels[row, col].Text = "";
+                        foreach (byte item in tempAv)
+                        {
+                            val++;
+                            if (item == 1)
+                            {
+                                labels[row, col].Text = labels[row, col].Text + val;
+                                labels[row, col].TextSize = 10;
+                            }
+                            if ((val % 3) == 0)
+                            {
+                                labels[row, col].Text = labels[row, col].Text + "\n";
+                            }
+                        }
+                    }
+                    val = 0;
+                }
+            }
+            await Task.Delay(1); // need an await statement to prevent NO AWAIT warning
+            // Should be done displaying everything
+            return true;
         }
 
         // A recursive function that will solve the given puzzle
         // It will continue until it can't find any empty slots in the puzzle
-        bool solvePuzzle(SudokuGrid sudoku)
+        private async Task<bool> solvePuzzle(SudokuGrid sudoku)
         {
             byte row, col;
             row = col = 0;
-            if (!FindUnassignedLocation(sudoku, ref row, ref col))
+            if (!findEmptySlot(sudoku, ref row, ref col))
             {
+                // Check to make sure that it didn't find an empty Slot that can't be assigned anything
+                if (row != 9 && col != 9)
+                {
+                    // It is an empty Slot so need to go back to assign a different value to the last Slot
+                    // If all Slots had been filled then both row and col would be equal to 9, otherwise it's an Empty Slot
+                    return false;
+                }
+
+                // There are no more empty Slots left hence the puzzle has been solved
                 return true;
             }
-            for (byte num = 1; num < 10; num++)
+
+            // How many possible values should be skipped
+            byte skip = 0;
+            // while the Slot is empty the loop should continue
+            while (sudoku.isSlotEmpty(row, col))
             {
-                if (sudoku.canAddValue(row, col, num))
+                if (sudoku.addAValueToSlot(row, col, skip))
                 {
-                    sudoku.addValue(row, col, num);
-                    labels[row, col].Text = "" + num;
-                    if (solvePuzzle(sudoku))
+                    labels[row, col].Text = "" + sudoku.getSlotValue(row, col);
+                    labels[row, col].TextSize = 20;
+
+                    await waiting(sudoku); // force the App to wait so the current state can be written to the screen
+                    if (await solvePuzzle(sudoku))
                     {
+                        // Only way to get here is that the puzzle has been solved
                         return true;
                     }
+                    // The puzzle couldn't be solved with the value assigned previously
+                    // so it needs to be reset so the while loop can continue
                     sudoku.addValue(row, col, 0);
-                    labels[row, col].Text = "_";
+                    labels[row, col].Text = "";
+                    skip++;
+                }
+                if (!sudoku.canPlaceAValue(row, col, skip))
+                {
+                    break;
                 }
             }
+
+            //for (byte num = 1; num < 10; num++)
+            //{
+            //    if (sudoku.canAddValue(row, col, num))
+            //    {
+            //        sudoku.addValue(row, col, num);
+            //        labels[row, col].Text = "" + num;
+            //        if (solvePuzzle(sudoku))
+            //        {
+            //            return true;
+            //        }
+            //        sudoku.addValue(row, col, 0);
+            //        labels[row, col].Text = "_";
+            //    }
+            //}
+
+            // returns false as nothing could be placed in this Slot, meaning the
+            // current placement of values isn't correct
             return false;
         }
 
-        bool FindUnassignedLocation(SudokuGrid sudoku, ref byte row, ref byte col)
+        // This function will try to find an empty Slot with in the grid, if found it will
+        // return true indicating that there's an empty Slot and will also return its
+        // location on the grid through the use of reference variables.
+        private bool findEmptySlot(SudokuGrid sudoku, ref byte row, ref byte col)
         {
+            byte tempAV = 10;    // If there are no empty slots then this will remain as 10
+            byte tempRow = 10;
+            byte tempCol= 10;
+
+            // Want the function to find the Slot with the least amount of possible values it can hold
+            // If the any given Slot it finds only has one possible value, return it immediately
             for (row = 0; row < 9; row++)
             {
                 for (col = 0; col < 9; col++)
                 {
                     if (sudoku.isSlotEmpty(row, col))
                     {
-                        return true;
+                        if (sudoku.getSlotMaxAv(row, col) < tempAV)
+                        {
+                            tempAV = sudoku.getSlotMaxAv(row, col);
+                            if (tempAV == 0)
+                            {
+                                // found an empty slot that can't be assigned anything
+                                return false;
+                            }
+                            tempRow = row;
+                            tempCol = col;
+                            // Check to see if the Slot isn't a Hidden Single
+                            // i.e has only one available value
+                            if (tempAV == 1)
+                            {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
+
+            if (tempAV > 1  && tempAV < 10)
+            {
+                // The for loop found an empty Slot that has more than one available value
+                // Need to update the reference values to point to the accurate Slot
+                row = tempRow;
+                col = tempCol;
+                return true;
+            }
+            // There are no empty Slots in the grid.
             return false;
+
+            // finds the first empty slot. Searches row-wise
+            //for (row = 0; row < 9; row++)
+            //{
+            //    for (col = 0; col < 9; col++)
+            //    {
+            //        if (sudoku.isSlotEmpty(row, col))
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
+            //return false;
         }
 
         //bool withinRow(int x, int row, int p[][9])

@@ -22,13 +22,21 @@ namespace SudokuAI
 
             // Get our button from the layout resource,
             // and attach an event to it
-            Button openButton = FindViewById<Button>(Resource.Id.MyButton);
+            //Button openButton = FindViewById<Button>(Resource.Id.MyButton);
 
-            openButton.Click += (ssender, e) =>
+            ImageView openImage = FindViewById<ImageView>(Resource.Id.MyImage);
+
+            openImage.Click += (sender, e) =>
             {
                 var intent = new Intent(this, typeof(GridActivity));
                 StartActivity(intent);
             };
+
+            //openButton.Click += (ssender, e) =>
+            //{
+            //    var intent = new Intent(this, typeof(GridActivity));
+            //    StartActivity(intent);
+            //};
         }
     }
 }

@@ -5,15 +5,16 @@
     android:padding="8dp">
     <ImageView
         android:id="@+id/MyImage"
-        android:src="@drawable/Icon"
+        android:src="@drawable/Opening"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <Button
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+    <!--<Button
         android:id="@+id/MyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/MyImage"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="500dip"
-        android:text="@string/Hello" />
+        android:text="@string/Hello" />-->
 </RelativeLayout>
