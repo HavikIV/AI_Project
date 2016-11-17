@@ -496,6 +496,8 @@ namespace SudokuAI
         //  to create a SudokuGrid instance, in order to solve the puzzle
         private async void startButton_Click(object s, EventArgs E)
         {
+            var startButton = (s as Button);
+            var nextButton = FindViewById<Button>(2);
             // Make sure that none of the columns or rows have multiples of a single value
             if (!hasDuplicates())
             {
@@ -527,16 +529,16 @@ namespace SudokuAI
 
                 // No longer want the user to be able to click on the startButton as
                 // I've already finished setting up the given puzzle to be solved
-                FindViewById<Button>(3).Enabled = false;
+                startButton.Enabled = false;
 
                 // Enable the nextButton
-                FindViewById<Button>(2).Enabled = true;
+                nextButton.Enabled = true;
 
                 // Start solving the puzzle
                 await solvePuzzle(sudoku);
 
                 // Since the puzzle has been solved need to disable the next button
-                FindViewById<Button>(2).Enabled = false;
+                nextButton.Enabled = false;
 
                 // Add the restart button
                 addRestart();
@@ -971,6 +973,7 @@ namespace SudokuAI
         private async void label_Click(object s, EventArgs E)
         {
             TextView label = (s as TextView);
+            var startButton = FindViewById<Button>(3);
             await click(label); // moved logic to this function to prevent multiple alertDialogs from opening
 
             // Need to enable the startButton if it hasn't already been enabled
