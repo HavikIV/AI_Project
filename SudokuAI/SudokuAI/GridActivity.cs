@@ -17,15 +17,15 @@ namespace SudokuAI
     public class GridActivity : Activity
     {
         // Global Variables
-        Button startButton;
-        Button nextButton;
-        Button restart;
-        RelativeLayout.LayoutParams startButtonParamsPortrait;
-        RelativeLayout.LayoutParams startButtonParamsLandscape;
-        RelativeLayout.LayoutParams nextButtonParamsPortrait;
-        RelativeLayout.LayoutParams nextButtonParamsLandscape;
-        RelativeLayout.LayoutParams restartParamsPortrait;
-        RelativeLayout.LayoutParams restartParamsLandscape;
+        //Button startButton;
+        //Button nextButton;
+        //Button restart;
+        //RelativeLayout.LayoutParams startButtonParamsPortrait;
+        //RelativeLayout.LayoutParams startButtonParamsLandscape;
+        //RelativeLayout.LayoutParams nextButtonParamsPortrait;
+        //RelativeLayout.LayoutParams nextButtonParamsLandscape;
+        //RelativeLayout.LayoutParams restartParamsPortrait;
+        //RelativeLayout.LayoutParams restartParamsLandscape;
         TextView[,] labels;
         bool waitingOnNext = true;
         //TextView testLabel;
@@ -45,7 +45,7 @@ namespace SudokuAI
 
             /**
              * Once the APP has been finished to the point that it can solve the given Sudoku puzzle,
-             * come back to make better looking labels. At the time of writing this, I suggest hardcoding
+             * come back to make better looking labels. At the time of writing this, I suggest hard coding
              * the height and width of the labels, so they will match with the squares in the grid image.
              * This will also make it easier for the APP know when a label is clicked and it won't need all 
              * of the paddings, just the alignments should be enough. Don't forget to center the text to the 
@@ -149,7 +149,7 @@ namespace SudokuAI
             layoutBase.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
             layoutBase.SetPadding(100, 100, 100, 100);
 
-            // Adding a Imageview to display the sudoku grid
+            // Adding a Imageview to display the Sudoku grid
             ImageView grid = new ImageView(this);
             grid.LayoutParameters = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
             grid.Visibility = ViewStates.Visible;
@@ -171,14 +171,14 @@ namespace SudokuAI
             //layoutBase.AddView(labelLayout);
 
             // Adding a button that will be used to step through the "AI"'s solution
-            nextButton = new Button(this) { Text = "Next" };
+            var nextButton = new Button(this) { Text = "Next" };
             nextButton.Id = 2;
             //nextButton.Visibility = ViewStates.Invisible; // Makes the button invisible
             nextButton.Enabled = false; // Disables the button so it can't be clicked
             nextButton.Click += NextButton_Click;
 
             // Adding a button that will be used to start the "AI" to solve the puzzle
-            startButton = new Button(this) { Text = "Start" };
+            var startButton = new Button(this) { Text = "Start" };
             startButton.Id = 3;
             //startButton.Visibility = ViewStates.Invisible; // Makes the button invisible
             startButton.Enabled = false; // Disables the button so it can't be clicked
@@ -186,43 +186,43 @@ namespace SudokuAI
 
             // Layout Parameters for Portrait mode
             // nextButton
-            nextButtonParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            nextButtonParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
-            nextButtonParamsPortrait.AddRule(LayoutRules.AlignParentRight);
+            var nextButtonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //nextButtonParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
+            //nextButtonParamsPortrait.AddRule(LayoutRules.AlignParentRight);
             // startButton
-            startButtonParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            startButtonParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
-            startButtonParamsPortrait.AddRule(LayoutRules.LeftOf, nextButton.Id);
+            var startButtonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //startButtonParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
+            //startButtonParamsPortrait.AddRule(LayoutRules.LeftOf, nextButton.Id);
 
             // Layout Parameters for Landscape mode
             // startButton
-            startButtonParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            startButtonParamsLandscape.AddRule(LayoutRules.AlignParentRight);
+            startButtonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //startButtonParamsLandscape.AddRule(LayoutRules.AlignParentRight);
             // nextButton
-            nextButtonParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            nextButtonParamsLandscape.AddRule(LayoutRules.AlignParentRight);
-            nextButtonParamsLandscape.AddRule(LayoutRules.Below, startButton.Id);
+            nextButtonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //nextButtonParamsLandscape.AddRule(LayoutRules.AlignParentRight);
+            //nextButtonParamsLandscape.AddRule(LayoutRules.Below, startButton.Id);
 
             var checkBox = new CheckBox(this) { Text = "Show Steps" };
             checkBox.Id = 97;
             checkBox.Checked = true;
-            var checkBoxParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            checkBoxParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
-
-            var checkBoxParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentRight);
-            checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentBottom);
-
-
-            // Add labels in the location of the squares 
+            var checkBoxParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
 
             // Depending on the initial orientation, the buttons will placed at different locations
             if (surfaceOrientation == SurfaceOrientation.Rotation0 || surfaceOrientation == SurfaceOrientation.Rotation180)
             {
                 // The screen is in Portrait mode
-                startButton.LayoutParameters = startButtonParamsPortrait;
-                nextButton.LayoutParameters = nextButtonParamsPortrait;
-                checkBox.LayoutParameters = checkBoxParamsPortrait;
+                // nextButton
+                nextButtonParams.AddRule(LayoutRules.AlignParentBottom);
+                nextButtonParams.AddRule(LayoutRules.AlignParentRight);
+                // startButton
+                startButtonParams.AddRule(LayoutRules.AlignParentBottom);
+                startButtonParams.AddRule(LayoutRules.LeftOf, nextButton.Id);
+
+                startButton.LayoutParameters = startButtonParams;
+                nextButton.LayoutParameters = nextButtonParams;
+                checkBoxParams.AddRule(LayoutRules.AlignParentBottom);
+                checkBox.LayoutParameters = checkBoxParams;
 
 
                 // Padding for the labels for Portrait orientation
@@ -230,7 +230,7 @@ namespace SudokuAI
                 {
                     for (byte j = 0; j < 9; j++)
                     {
-                        // Set the height and width of each indiviual label for Portrait orientation
+                        // Set the height and width of each individual label for Portrait orientation
                         labels[i, j].SetHeight(180);
                         labels[i, j].SetWidth(138);
                         // As each has a specific size, height and width, they no longer
@@ -279,21 +279,24 @@ namespace SudokuAI
             else
             {
                 // The screen is in Landscape mode
-                startButton.LayoutParameters = startButtonParamsLandscape;
-                nextButton.LayoutParameters = nextButtonParamsLandscape;
-                checkBox.LayoutParameters = checkBoxParamsLandscape;
+                // startButton
+                startButtonParams.AddRule(LayoutRules.AlignParentRight);
+                // nextButton
+                nextButtonParams.AddRule(LayoutRules.AlignParentRight);
+                nextButtonParams.AddRule(LayoutRules.Below, startButton.Id);
 
-                if (restart != null)
-                {
-                    restart.LayoutParameters = restartParamsLandscape;
-                }
+                startButton.LayoutParameters = startButtonParams;
+                nextButton.LayoutParameters = nextButtonParams;
+                checkBoxParams.AddRule(LayoutRules.AlignParentRight);
+                checkBoxParams.AddRule(LayoutRules.AlignParentBottom);
+                checkBox.LayoutParameters = checkBoxParams;
 
                 // Padding for the labels for Landscape orientation
                 for (byte i = 0; i < 9; i++)
                 {
                     for (byte j = 0; j < 9; j++)
                     {
-                        // Set the height and width of each indiviual label for Landscape orientation
+                        // Set the height and width of each individual label for Landscape orientation
                         labels[i, j].SetHeight(125);
                         labels[i, j].SetWidth(185);
                         // As each has a specific size, height and width, they no longer
@@ -355,7 +358,7 @@ namespace SudokuAI
             //testLabel2.SetPadding(100, 50, 0, 0);
 
             //// test click option for textview
-            //testLabel.Click += (ssender, e) =>
+            //testLabel.Click += (sender, e) =>
             //{
             //    testLabel.Text = "" + count++;
             //};
@@ -388,27 +391,51 @@ namespace SudokuAI
         {
             base.OnConfigurationChanged(newConfig);
 
+            var checkBoxParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            var startButton = FindViewById<Button>(3);
+            var nextButton = FindViewById<Button>(2);
+            // Parameters for nextButton
+            var nextButtonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            // Parameters for startButton
+            var startButtonParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+
+
             if (newConfig.Orientation == Android.Content.Res.Orientation.Portrait)
             {
-                startButton.LayoutParameters = startButtonParamsPortrait;
-                nextButton.LayoutParameters = nextButtonParamsPortrait;
+                // nextButton Rules
+                nextButtonParams.AddRule(LayoutRules.AlignParentBottom);
+                nextButtonParams.AddRule(LayoutRules.AlignParentRight);
+                // startButton Rules
+                startButtonParams.AddRule(LayoutRules.AlignParentBottom);
+                startButtonParams.AddRule(LayoutRules.LeftOf, nextButton.Id);
 
-                var checkBoxParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                checkBoxParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
+                startButton.LayoutParameters = startButtonParams;
+                nextButton.LayoutParameters = nextButtonParams;
 
-                FindViewById<CheckBox>(97).LayoutParameters = checkBoxParamsPortrait;
+                checkBoxParams.AddRule(LayoutRules.AlignParentBottom);
 
-                if (restart != null)
+                FindViewById<CheckBox>(97).LayoutParameters = checkBoxParams;
+
+                try
                 {
-                    restart.LayoutParameters = restartParamsPortrait;
+                    var restart = FindViewById<Button>(99);
+                    if (restart != null)
+                    {
+                        // Layout Parameters
+                        var restartParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        restartParams.AddRule(LayoutRules.AlignParentBottom);
+                        restartParams.AddRule(LayoutRules.LeftOf, 3);
+                        restart.LayoutParameters = restartParams;
+                    }
                 }
+                catch (ArgumentNullException e) { throw e; }
 
                 // Padding for the labels for Portrait orientation
                 for (byte i = 0; i < 9; i++)
                 {
                     for (byte j = 0; j < 9; j++)
                     {
-                        // Set the height and width of each indiviual label for Portrait orientation
+                        // Set the height and width of each individual label for Portrait orientation
                         labels[i, j].SetHeight(180);
                         labels[i, j].SetWidth(138);
                         // As each has a specific size, height and width, they no longer
@@ -419,26 +446,39 @@ namespace SudokuAI
             }
             else if (newConfig.Orientation == Android.Content.Res.Orientation.Landscape)
             {
-                startButton.LayoutParameters = startButtonParamsLandscape;
-                nextButton.LayoutParameters = nextButtonParamsLandscape;
+                // startButton Rules
+                startButtonParams.AddRule(LayoutRules.AlignParentRight);
+                // nextButton Rules
+                nextButtonParams.AddRule(LayoutRules.AlignParentRight);
+                nextButtonParams.AddRule(LayoutRules.Below, startButton.Id);
 
-                var checkBoxParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentRight);
-                checkBoxParamsLandscape.AddRule(LayoutRules.AlignParentBottom);
+                startButton.LayoutParameters = startButtonParams;
+                nextButton.LayoutParameters = nextButtonParams;
 
-                FindViewById<CheckBox>(97).LayoutParameters = checkBoxParamsLandscape;
+                checkBoxParams.AddRule(LayoutRules.AlignParentRight);
+                checkBoxParams.AddRule(LayoutRules.AlignParentBottom);
 
-                if (restart != null)
+                FindViewById<CheckBox>(97).LayoutParameters = checkBoxParams;
+
+                try
                 {
-                    restart.LayoutParameters = restartParamsLandscape;
+                    var restart = FindViewById<Button>(99);
+                    if (restart != null)
+                    {
+                        var restartParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        restartParams.AddRule(LayoutRules.AlignParentRight);
+                        restartParams.AddRule(LayoutRules.Below, 2);
+                        restart.LayoutParameters = restartParams;
+                    }
                 }
+                catch (ArgumentNullException e) { throw e; }
 
                 // Padding for the labels for Landscape orientation
                 for (byte i = 0; i < 9; i++)
                 {
                     for (byte j = 0; j < 9; j++)
                     {
-                        // Set the height and width of each indiviual label for Landscape orientation
+                        // Set the height and width of each individual label for Landscape orientation
                         labels[i, j].SetHeight(125);
                         labels[i, j].SetWidth(185);
                         // As each has a specific size, height and width, they no longer
@@ -487,16 +527,16 @@ namespace SudokuAI
 
                 // No longer want the user to be able to click on the startButton as
                 // I've already finished setting up the given puzzle to be solved
-                startButton.Enabled = false;
+                FindViewById<Button>(3).Enabled = false;
 
                 // Enable the nextButton
-                nextButton.Enabled = true;
+                FindViewById<Button>(2).Enabled = true;
 
                 // Start solving the puzzle
                 await solvePuzzle(sudoku);
 
                 // Since the puzzle has been solved need to disable the next button
-                nextButton.Enabled = false;
+                FindViewById<Button>(2).Enabled = false;
 
                 // Add the restart button
                 addRestart();
@@ -521,19 +561,11 @@ namespace SudokuAI
         private void addRestart()
         {
             // Add the restart button the screen
-            restart = new Button(this) { Text = "Restart" };
+            var restart = new Button(this) { Text = "Restart" };
             restart.Id = 99;
 
-            // Layout Parameters for Portrait mode
-            restartParamsPortrait = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            restartParamsPortrait.AddRule(LayoutRules.AlignParentBottom);
-            restartParamsPortrait.AddRule(LayoutRules.LeftOf, startButton.Id);
-
-
-            // Layout Parameters for Landscape mode
-            restartParamsLandscape = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-            restartParamsLandscape.AddRule(LayoutRules.AlignParentRight);
-            restartParamsLandscape.AddRule(LayoutRules.Below, nextButton.Id);
+            // Layout Parameters
+            var restartParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
 
             var surfaceOrientation = WindowManager.DefaultDisplay.Rotation;
 
@@ -541,13 +573,17 @@ namespace SudokuAI
             if (surfaceOrientation == SurfaceOrientation.Rotation0 || surfaceOrientation == SurfaceOrientation.Rotation180)
             {
                 // The screen is in Portrait mode
-                restart.LayoutParameters = restartParamsPortrait;
+                restartParams.AddRule(LayoutRules.AlignParentBottom);
+                restartParams.AddRule(LayoutRules.LeftOf, 3);
+                restart.LayoutParameters = restartParams;
 
             }
             else
             {
                 // The screen is in Landscape mode
-                restart.LayoutParameters = restartParamsLandscape;
+                restartParams.AddRule(LayoutRules.AlignParentRight);
+                restartParams.AddRule(LayoutRules.Below, 2);
+                restart.LayoutParameters = restartParams;
             }
 
             restart.Click += Restart_Click;
@@ -579,7 +615,7 @@ namespace SudokuAI
                 for (byte j = 0; j < 9; j++)
                 {
                     //labels[i, j].Enabled = false; // disables the label
-                    labels[i, j].Clickable = false; // diables the label's click event
+                    labels[i, j].Clickable = false; // disables the label's click event
                 }
             }
         }
@@ -600,7 +636,7 @@ namespace SudokuAI
         private async Task<bool> waiting(SudokuGrid sudoku)
         {
             // Display all possible values that each empty Slot can have
-            await displayCurrentState(sudoku);
+            displayCurrentState(sudoku);
             while (waitingOnNext)
             {
                 await Task.Delay(1);
@@ -613,7 +649,7 @@ namespace SudokuAI
 
         // This function will write the current state of the Sudoku Puzzle to the screen
         // By current I'm referring to the what values an empty Slot can have
-        private async Task<bool> displayCurrentState(SudokuGrid sudoku)
+        private void displayCurrentState(SudokuGrid sudoku)
         {
             byte val = 0;
             for (byte row = 0; row < 9; row++)
@@ -641,9 +677,6 @@ namespace SudokuAI
                     val = 0;
                 }
             }
-            await Task.Delay(1); // need an await statement to prevent NO AWAIT warning
-            // Should be done displaying everything
-            return true;
         }
 
         // A recursive function that will solve the given puzzle
@@ -917,74 +950,101 @@ namespace SudokuAI
             return duplicates;
         }
 
-        //  Function that is called whenever one of the labels has been pressed/tapped
         //  This function will display a "picker" that will allow the user to select a number from 1 to 9
-        //  and the number will be placed in the slot
-        private void label_Click(object s, EventArgs E)
+        //  and the number will be placed in the slot. This also gets rid of the problem of having to double click before
+        private async Task click(TextView label)
+        {
+            // Create a dialog to get user input
+            var dialog = new NumberPickerDialogFragment(this, 1, 9, 3, ref label);
+            dialog.Show(FragmentManager, "number");
+
+            await Task.Delay(500); // wait for the dialog to show on to the screen
+            
+            // Don't want the function to exit until the dialog has been closed
+            while (dialog.IsAdded)
+            {
+                await Task.Delay(50);
+            }
+        }
+
+        //  Function that is called whenever one of the labels has been pressed/tapped
+        private async void label_Click(object s, EventArgs E)
         {
             TextView label = (s as TextView);
-            label.Click += async (sender, e) =>
+            await click(label); // moved logic to this function to prevent multiple alertDialogs from opening
+
+            // Need to enable the startButton if it hasn't already been enabled
+            // It should only be enabled when at least one of the labels has a numeric value
+            // It will remain enabled even if the all of the labels were to be cleared
+            // In this case, I would need another function that scans all labels before it can be disabled,
+            // Or I could just a byte/int type variable that keeps track of number of labels with numeric values
+            if (!startButton.Enabled && label.Text != "")
             {
-                // Create a dialog to get user input
-                var dialog = new NumberPickerDialogFragment(this, 1, 9, 3, ref label);
-                dialog.Show(FragmentManager, "number");
+                startButton.Enabled = true;
+            }
 
-                await Task.Delay(500); // wait for the dialog to show on to the screen
-                // Don't want the function to continue executing until the dialog has been closed
-                while (dialog.IsAdded)
-                {
-                    await Task.Delay(50);
-                }
-                // Need to enable the startButton if it hasn't already been enabled
-                // It should only be enabled when at least one of the labels has a nonzero value
-                if (!startButton.Enabled && label.Text != "_")
-                {
-                    startButton.Enabled = true;
-                }
+            //label.Click += async (sender, e) =>
+            //{
+            //    // Create a dialog to get user input
+            //    var dialog = new NumberPickerDialogFragment(this, 1, 9, 3, ref label);
+            //    dialog.Show(FragmentManager, "number");
 
-                /**  Will use the NumberPickerDialog class instead creating the dialog here
-                // Create a linerLayout for which hold a NumberPicker
-                // The NumberPicker will have a range of 1-9 and should have its
-                // orientation set as horizontal, not sure if it works.
-                RelativeLayout linearLayout = new RelativeLayout(this);
-                NumberPicker picker = new NumberPicker(this);
-                picker.MaxValue = 9;
-                picker.MinValue = 1;
-                picker.Orientation = Orientation.Horizontal;
-                
-                // Set the layout parameters for both the linearLayout and the picker
-                // The picker will be set to the center, so it is in the displayed dialog, before
-                // adding it to the linearLayout.
-                RelativeLayout.LayoutParams Layparams = new RelativeLayout.LayoutParams(50, 50);
-                RelativeLayout.LayoutParams pickerParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                pickerParams.AddRule(LayoutRules.CenterInParent);
-                picker.LayoutParameters = pickerParams;
+            //    await Task.Delay(500); // wait for the dialog to show on to the screen
+            //    // Don't want the function to continue executing until the dialog has been closed
+            //    while (dialog.IsAdded)
+            //    {
+            //        await Task.Delay(50);
+            //    }
+            //    // Need to enable the startButton if it hasn't already been enabled
+            //    // It should only be enabled when at least one of the labels has a nonzero value
+            //    if (!startButton.Enabled && label.Text != "_")
+            //    {
+            //        startButton.Enabled = true;
+            //    }
 
-                linearLayout.LayoutParameters = Layparams;
-                linearLayout.LayoutDirection = LayoutDirection.Ltr;
-                linearLayout.AddView(picker);
+            //    /**  Will use the NumberPickerDialog class instead creating the dialog here
+            //    // Create a linerLayout for which hold a NumberPicker
+            //    // The NumberPicker will have a range of 1-9 and should have its
+            //    // orientation set as horizontal, not sure if it works.
+            //    RelativeLayout linearLayout = new RelativeLayout(this);
+            //    NumberPicker picker = new NumberPicker(this);
+            //    picker.MaxValue = 9;
+            //    picker.MinValue = 1;
+            //    picker.Orientation = Orientation.Horizontal;
 
-                // Create an AlertDialog that will hold the linearLayout with the NumberPicker
-                // When the OK button is clicked, it will update the clicked label's Text field
-                // to display the selected value in the picker.
-                AlertDialog.Builder pickerAlertDialog = new AlertDialog.Builder(this);
-                pickerAlertDialog.SetTitle("Select a number");
-                pickerAlertDialog.SetView(linearLayout);
+            //    // Set the layout parameters for both the linearLayout and the picker
+            //    // The picker will be set to the center, so it is in the displayed dialog, before
+            //    // adding it to the linearLayout.
+            //    RelativeLayout.LayoutParams Layparams = new RelativeLayout.LayoutParams(50, 50);
+            //    RelativeLayout.LayoutParams pickerParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+            //    pickerParams.AddRule(LayoutRules.CenterInParent);
+            //    picker.LayoutParameters = pickerParams;
 
-                /** Use the NumberPicker created in the NumberPickerDialog.xml **
-                //var inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
-                //var view = inflater.Inflate(Resource.Layout.NumberPickerDialog, null);
-                //var numberPicker = view.FindViewById<NumberPicker>(Resource.Id.numberPicker);
-                //numberPicker.MaxValue = 9;
-                //numberPicker.MinValue = 1;
-                //numberPicker.Value = 2;
-                //pickerAlertDialog.SetView(view);
+            //    linearLayout.LayoutParameters = Layparams;
+            //    linearLayout.LayoutDirection = LayoutDirection.Ltr;
+            //    linearLayout.AddView(picker);
 
-                pickerAlertDialog.SetPositiveButton("OK", (y, a) => { label.Text = picker.Value.ToString(); });
-                pickerAlertDialog.SetNegativeButton("Cancel", (y, a) => { });
-                pickerAlertDialog.Show(); **/
+            //    // Create an AlertDialog that will hold the linearLayout with the NumberPicker
+            //    // When the OK button is clicked, it will update the clicked label's Text field
+            //    // to display the selected value in the picker.
+            //    AlertDialog.Builder pickerAlertDialog = new AlertDialog.Builder(this);
+            //    pickerAlertDialog.SetTitle("Select a number");
+            //    pickerAlertDialog.SetView(linearLayout);
 
-            };
+            //    /** Use the NumberPicker created in the NumberPickerDialog.xml **
+            //    //var inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
+            //    //var view = inflater.Inflate(Resource.Layout.NumberPickerDialog, null);
+            //    //var numberPicker = view.FindViewById<NumberPicker>(Resource.Id.numberPicker);
+            //    //numberPicker.MaxValue = 9;
+            //    //numberPicker.MinValue = 1;
+            //    //numberPicker.Value = 2;
+            //    //pickerAlertDialog.SetView(view);
+
+            //    pickerAlertDialog.SetPositiveButton("OK", (y, a) => { label.Text = picker.Value.ToString(); });
+            //    pickerAlertDialog.SetNegativeButton("Cancel", (y, a) => { });
+            //    pickerAlertDialog.Show(); **/
+
+            //};
         }
     }
 }
