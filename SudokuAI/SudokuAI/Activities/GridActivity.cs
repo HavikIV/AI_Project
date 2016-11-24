@@ -26,8 +26,8 @@ namespace SudokuAI
         //RelativeLayout.LayoutParams nextButtonParamsLandscape;
         //RelativeLayout.LayoutParams restartParamsPortrait;
         //RelativeLayout.LayoutParams restartParamsLandscape;
-        TextView[,] labels;
-        bool waitingOnNext = true;
+        private TextView[,] labels;
+        private bool waitingOnNext = true;
         //TextView testLabel;
         //RelativeLayout.LayoutParams nestLayoutParams;
         //byte[,] hintGird;
@@ -687,6 +687,7 @@ namespace SudokuAI
         {
             byte row, col;
             row = col = 0;
+            var showSteps = FindViewById<CheckBox>(97);
             if (!findEmptySlot(sudoku, ref row, ref col))
             {
                 // Check to make sure that it didn't find an empty Slot that can't be assigned anything
@@ -711,7 +712,7 @@ namespace SudokuAI
                     labels[row, col].Text = "" + sudoku.getSlotValue(row, col);
                     labels[row, col].TextSize = 20;
 
-                    if (FindViewById<CheckBox>(97).Checked)
+                    if (showSteps.Checked)
                     {
                         await waiting(sudoku); // force the App to wait so the current state can be written to the screen
                     }

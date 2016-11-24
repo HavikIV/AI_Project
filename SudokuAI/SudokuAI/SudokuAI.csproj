@@ -49,16 +49,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GridActivity.cs" />
-    <Compile Include="MainActivity.cs" />
-    <Compile Include="NumberPickerDialog.cs" />
+    <Compile Include="Activities\GridActivity.cs" />
+    <Compile Include="Classes\LinkedList.cs" />
+    <Compile Include="Activities\MainActivity.cs" />
+    <Compile Include="Classes\NumberPickerDialog.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Slot.cs" />
-    <Compile Include="SudokuGrid.cs" />
+    <Compile Include="Classes\Slot.cs" />
+    <Compile Include="Classes\SudokuGrid.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GettingStarted.Xamarin" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
