@@ -62,21 +62,25 @@ namespace SudokuAI
                     //int[][] states = new int[][]
                     //{
                     //    new int[] { Android.Resource.Attribute.StatePressed },  // pressed
-                    //    new int [] { Android.Resource.Attribute.StateFocused }, // focused
-                    //    new int[] { Android.Resource.Attribute.StateEnabled  }   // enabled
+                    //    new int[] { Android.Resource.Attribute.StateFocused }, // focused
+                    //    new int[] { Android.Resource.Attribute.StateEnabled },   // enabled
+                    //    new int[] { -Android.Resource.Attribute.StateEnabled },    // disabled
+                    //    new int[] { -Android.Resource.Attribute.StateFocused }  // unfocused
                     //};
 
                     //int[] colors = new int[]
                     //{
                     //    Android.Resource.Color.Black, // green
-                    //    Android.Resource.Color.Black, // blue
-                    //    Android.Resource.Color.Black  // red
+                    //    Android.Resource.Color.HoloBlueDark, // blue
+                    //    Android.Resource.Color.HoloRedDark,  // red
+                    //    Android.Resource.Color.HoloPurple,   // purple
+                    //    Android.Resource.Color.Black   // orange
                     //};
 
                     //Android.Content.Res.ColorStateList list = new Android.Content.Res.ColorStateList(states, colors);
 
                     labels[i,j] = new TextView(this);
-                    //labels[i, j].SetTextColor(list);
+                    //labels[i, j].SetTextColor(Resources.GetColorStateList(Resource.Drawable.label_txtColor));
                     labels[i,j].Text = "";
                     // Give each of the labels a unique ID; range 4-84
                     labels[i,j].Id = (4 + (9 * i)) + j;
@@ -224,18 +228,27 @@ namespace SudokuAI
                 checkBoxParams.AddRule(LayoutRules.AlignParentBottom);
                 checkBox.LayoutParameters = checkBoxParams;
 
-
+                //labels[0, 0].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[1, 1].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[2, 2].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[3, 3].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[4, 4].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[5, 5].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[6, 6].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[7, 7].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[8, 8].SetBackgroundColor(Android.Graphics.Color.Blue);
+                //labels[8, 0].SetBackgroundColor(Android.Graphics.Color.Blue);
                 // Padding for the labels for Portrait orientation
                 for (byte i = 0; i < 9; i++)
                 {
                     for (byte j = 0; j < 9; j++)
                     {
                         // Set the height and width of each individual label for Portrait orientation
-                        labels[i, j].SetHeight(180);
-                        labels[i, j].SetWidth(138);
+                        labels[i, j].SetHeight(Resources.GetDimensionPixelSize(Resource.Dimension.Plabel_height));
+                        labels[i, j].SetWidth(Resources.GetDimensionPixelSize(Resource.Dimension.Plabel_width));
                         // As each has a specific size, height and width, they no longer
                         // different SetPadding parameters as before
-                        labels[i, j].SetPadding(55, 45, 0, 0);
+                        labels[i, j].SetPadding(Resources.GetDimensionPixelSize(Resource.Dimension.PLpadding_left), Resources.GetDimensionPixelSize(Resource.Dimension.PLpadding_top), 0, 0);
                     }
                 }
 
@@ -297,11 +310,11 @@ namespace SudokuAI
                     for (byte j = 0; j < 9; j++)
                     {
                         // Set the height and width of each individual label for Landscape orientation
-                        labels[i, j].SetHeight(125);
-                        labels[i, j].SetWidth(185);
+                        labels[i, j].SetHeight(Resources.GetDimensionPixelSize(Resource.Dimension.Llabel_height));
+                        labels[i, j].SetWidth(Resources.GetDimensionPixelSize(Resource.Dimension.Llabel_width));
                         // As each has a specific size, height and width, they no longer
                         // different SetPadding parameters as before
-                        labels[i, j].SetPadding(80, 50, 0, 0);
+                        labels[i, j].SetPadding(Resources.GetDimensionPixelSize(Resource.Dimension.LLpadding_left), Resources.GetDimensionPixelSize(Resource.Dimension.LLpadding_top), 0, 0);
                     }
                 }
 
@@ -436,11 +449,11 @@ namespace SudokuAI
                     for (byte j = 0; j < 9; j++)
                     {
                         // Set the height and width of each individual label for Portrait orientation
-                        labels[i, j].SetHeight(180);
-                        labels[i, j].SetWidth(138);
+                        labels[i, j].SetHeight(Resources.GetDimensionPixelSize(Resource.Dimension.Plabel_height));
+                        labels[i, j].SetWidth(Resources.GetDimensionPixelSize(Resource.Dimension.Plabel_width));
                         // As each has a specific size, height and width, they no longer
                         // different SetPadding parameters as before
-                        labels[i, j].SetPadding(55, 45, 0, 0);
+                        labels[i, j].SetPadding(Resources.GetDimensionPixelSize(Resource.Dimension.PLpadding_left), Resources.GetDimensionPixelSize(Resource.Dimension.PLpadding_top), 0, 0);
                     }
                 }
             }
@@ -479,11 +492,11 @@ namespace SudokuAI
                     for (byte j = 0; j < 9; j++)
                     {
                         // Set the height and width of each individual label for Landscape orientation
-                        labels[i, j].SetHeight(125);
-                        labels[i, j].SetWidth(185);
+                        labels[i, j].SetHeight(Resources.GetDimensionPixelSize(Resource.Dimension.Llabel_height));
+                        labels[i, j].SetWidth(Resources.GetDimensionPixelSize(Resource.Dimension.Llabel_width));
                         // As each has a specific size, height and width, they no longer
                         // different SetPadding parameters as before
-                        labels[i, j].SetPadding(80, 50, 0, 0);
+                        labels[i, j].SetPadding(Resources.GetDimensionPixelSize(Resource.Dimension.LLpadding_left), Resources.GetDimensionPixelSize(Resource.Dimension.LLpadding_top), 0, 0);
                     }
                 }
             }
@@ -498,6 +511,7 @@ namespace SudokuAI
         {
             var startButton = (s as Button);
             var nextButton = FindViewById<Button>(2);
+            var showSteps = FindViewById<CheckBox>(97);
             // Make sure that none of the columns or rows have multiples of a single value
             if (!hasDuplicates())
             {
@@ -534,6 +548,13 @@ namespace SudokuAI
                 // Enable the nextButton
                 nextButton.Enabled = true;
 
+                // Show the puzzle's beginning state and wait for the user to press next 
+                // before starting to solve. Only need to wait if the user wants to see the steps
+                if (showSteps.Checked)
+                {
+                    await waiting(sudoku);
+                }
+
                 // Start solving the puzzle
                 await solvePuzzle(sudoku);
 
@@ -563,7 +584,7 @@ namespace SudokuAI
         private void addRestart()
         {
             // Add the restart button the screen
-            var restart = new Button(this) { Text = "Restart" };
+            var restart = new Button(this) { Text = "Reset" };
             restart.Id = 99;
 
             // Layout Parameters
@@ -662,6 +683,7 @@ namespace SudokuAI
                     {
                         byte[] tempAv = sudoku.getSlotAV(row, col);
                         labels[row, col].Text = "";
+                        //labels[row, col].SetTextColor(Resources.GetColorStateList(Resource.Drawable.txtColorAV, null));
                         foreach (byte item in tempAv)
                         {
                             val++;
@@ -710,6 +732,7 @@ namespace SudokuAI
                 if (sudoku.addAValueToSlot(row, col, skip))
                 {
                     labels[row, col].Text = "" + sudoku.getSlotValue(row, col);
+                    //labels[row, col].SetTextColor(Resources.GetColorStateList(Resource.Drawable.txtColorSolved, null));
                     labels[row, col].TextSize = 20;
 
                     if (showSteps.Checked)
@@ -726,6 +749,10 @@ namespace SudokuAI
                     sudoku.addValue(row, col, 0);
                     labels[row, col].Text = "";
                     skip++;
+                    if (showSteps.Checked)
+                    {
+                        await waiting(sudoku); // force the App to wait so the current state can be written to the screen
+                    }
                 }
                 if (!sudoku.canPlaceAValue(row, col, skip))
                 {

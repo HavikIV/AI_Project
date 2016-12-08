@@ -8,7 +8,7 @@ using Android.OS;
 
 namespace SudokuAI
 {
-    [Activity(Theme = "@android:style/Theme.Material.Light", Label = "SudokuAI", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Theme = "@android:style/Theme.Material.Light", Label = "Sudoku Solver", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)

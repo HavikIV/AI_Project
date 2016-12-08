@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <!--color for values placed in the puzzle by the solver -->
+  <drawable name="solvedColor">#FFFFFFFF</drawable>
+  <!--color for the displayed AV's -->
+  <drawable name="avColor">#F51F2F56</drawable>
+</resources>

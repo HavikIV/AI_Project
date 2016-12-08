@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Hello">Let\'s enter the APP</string>
-    <string name="ApplicationName">SudokuAI</string>
+    <string name="ApplicationName">Sudoku Solver</string>
     <string name="NumberPickerTitle">Pick a number.</string>
 </resources>
