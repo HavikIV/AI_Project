@@ -80,7 +80,7 @@ namespace SudokuAI
                     //Android.Content.Res.ColorStateList list = new Android.Content.Res.ColorStateList(states, colors);
 
                     labels[i,j] = new TextView(this);
-                    //labels[i, j].SetTextColor(Resources.GetColorStateList(Resource.Drawable.label_txtColor));
+                    //labels[i, j].SetTextColor(Android.Graphics.Color.Blue);
                     labels[i,j].Text = "";
                     // Give each of the labels a unique ID; range 4-84
                     labels[i,j].Id = (4 + (9 * i)) + j;
@@ -622,6 +622,7 @@ namespace SudokuAI
                 for (byte j = 0; j < 9; j++)
                 {
                     labels[i, j].Text = "";
+                    labels[i, j].SetTextColor(Android.Graphics.Color.Black);
                 }
             }
             enableLabels();
@@ -684,6 +685,7 @@ namespace SudokuAI
                         byte[] tempAv = sudoku.getSlotAV(row, col);
                         labels[row, col].Text = "";
                         //labels[row, col].SetTextColor(Resources.GetColorStateList(Resource.Drawable.txtColorAV, null));
+                        labels[row, col].SetTextColor(Android.Graphics.Color.Orange);
                         foreach (byte item in tempAv)
                         {
                             val++;
@@ -733,6 +735,7 @@ namespace SudokuAI
                 {
                     labels[row, col].Text = "" + sudoku.getSlotValue(row, col);
                     //labels[row, col].SetTextColor(Resources.GetColorStateList(Resource.Drawable.txtColorSolved, null));
+                    labels[row, col].SetTextColor(Android.Graphics.Color.Blue);
                     labels[row, col].TextSize = 20;
 
                     if (showSteps.Checked)
@@ -748,6 +751,7 @@ namespace SudokuAI
                     // so it needs to be reset so the while loop can continue
                     sudoku.addValue(row, col, 0);
                     labels[row, col].Text = "";
+                    labels[row, col].SetTextColor(Android.Graphics.Color.Orange);
                     skip++;
                     if (showSteps.Checked)
                     {
